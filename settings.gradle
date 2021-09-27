@@ -1,0 +1,2 @@
+rootProject.name='TriageAppIntelliSoft'
+include ':app'
