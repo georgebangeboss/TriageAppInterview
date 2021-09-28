@@ -7,41 +7,71 @@
     android:orientation="vertical"
     tools:context=".VisitForm">
 
-    <RadioGroup
-        android:id="@+id/drugs_radios"
-        android:layout_width="55dp"
-        android:layout_height="wrap_content">
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/current_date_tv"
+        android:layout_width="wrap_content"
+        android:padding="5dp"
+        android:layout_height="30dp"
+        android:layout_gravity="right"
+        android:layout_margin="10dp"
+        android:text="Date Here" />
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/radio_yes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yes" />
-
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/radio_no"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No" />
-
-    </RadioGroup>
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:gravity="center|left"
+        android:text="General Health?" />
 
     <RadioGroup
         android:id="@+id/heath_status_radios"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:paddingLeft="20dp"
+        android:gravity="center|left"
+        android:layout_height="100dp">
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_good"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="Good" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_bad"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="Bad" />
+
+    </RadioGroup>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:gravity="center|left"
+        android:text="Have you ever been on diet to lose weight?" />
+
+    <RadioGroup
+        android:id="@+id/diet_history_radios"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:paddingLeft="20dp"
+        android:gravity="center|left"
+        android:layout_height="100dp">
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radio_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="Yes" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radio_no"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="No" />
 
     </RadioGroup>
 
@@ -51,22 +81,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Comments"
-
         app:counterEnabled="true"
-        app:counterMaxLength="200">
+        android:layout_margin="10dp"
+        app:counterMaxLength="400">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/comments_edit_text"
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:maxLength="200" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/save_btn"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="save" />
 
 
 </LinearLayout>

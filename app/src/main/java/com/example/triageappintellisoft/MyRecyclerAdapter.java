@@ -56,7 +56,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
             patientNameTV = (MaterialTextView) view.findViewById(R.id.full_name_tv);
             ageTV = (MaterialTextView) view.findViewById(R.id.age_tv);
             bmiTV = (MaterialTextView) view.findViewById(R.id.bmi_tv);
-            //add click listener here
+            //TODO add click listener here
         }
 
         public MaterialTextView getPatientNameTV() {
