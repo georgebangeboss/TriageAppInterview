@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.triageappintellisoft">
-
+    package="com.example.triageappintellisoft"
+    >
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme"
+        >
+        <activity
+            android:name=".RegistrationPage"
+            android:label="@string/registration_page_label"
+            android:exported="false" />
+        <activity
+            android:name=".VitalsForm"
+            android:exported="false"
+            android:label="@string/vitals_page_label" />
+        <activity
+            android:name=".VisitForm"
+            android:label="@string/default_visit_form_page_label" />
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

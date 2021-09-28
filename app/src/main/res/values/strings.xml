@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">TriageAppIntelliSoft</string>
+    <string name="app_name">TriageApp</string>
+    <string name="default_visit_form_page_label">Form A</string>
+    <string name="vitals_page_label">Vitals</string>
+    <string name="patient_listing_label">Patient Listing</string>
+    <string name="registration_page_label">Patient Registration</string>
 </resources>

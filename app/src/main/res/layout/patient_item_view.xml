@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/patient_frame"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:text="Full name"
+            android:id="@+id/full_name_tv"
+            android:layout_weight="6"
+            android:layout_height="50dp"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:text="Age"
+            android:id="@+id/age_tv"
+            android:layout_weight="2"
+            android:layout_height="50dp"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:text="BMI status"
+            android:id="@+id/bmi_tv"
+            android:layout_weight="2"
+            android:layout_height="50dp"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>
