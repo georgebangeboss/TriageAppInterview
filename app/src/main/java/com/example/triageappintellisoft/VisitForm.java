@@ -1,5 +1,8 @@
 package com.example.triageappintellisoft;
 
+import static com.example.triageappintellisoft.VitalsForm.FORM_TITLE;
+import static com.example.triageappintellisoft.VitalsForm.PATIENT_PK;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,19 +15,25 @@ import android.view.View;
 import android.widget.RadioGroup;
 
 import com.example.triageappintellisoft.databinding.ActivityVisitFormBinding;
+import com.example.triageappintellisoft.models.Visit;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.gson.Gson;
 
 public class VisitForm extends AppCompatActivity {
     private ActivityVisitFormBinding binding;
     private RadioGroup dietHistoryRadioGroup;
     private RadioGroup healthRadioGroup;
-    private TextInputEditText textInputEditText;
+    private TextInputEditText commentsEditText;
     private MaterialTextView currentDateTV;
 
     private HealthStatus healthStatus = HealthStatus.GOOD;
     private DietHistory dietHistory = DietHistory.NO;
     private String comments = "";
+    private String formTitle;
+    private int patientPK;
+    private String dietHistoryString, healthStatusString;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +42,15 @@ public class VisitForm extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         Intent intent = getIntent();
-        String formTitle = intent.getStringExtra("FORM_TITLE");
+        formTitle = intent.getStringExtra(FORM_TITLE);
+        //TODO reset the activity label here
 
+        patientPK = intent.getIntExtra(PATIENT_PK, 1000000);
         currentDateTV = binding.currentDateTv;
 
         dietHistoryRadioGroup = binding.dietHistoryRadios;
         healthRadioGroup = binding.heathStatusRadios;
-        textInputEditText = binding.commentsEditText;
+        commentsEditText = binding.commentsEditText;
 
         dietHistoryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -114,11 +125,25 @@ public class VisitForm extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                //TODO
-                // save to server then go to next page
+                saveToDB();
+                Intent intent = new Intent(VisitForm.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void saveToDB() {
+        comments = commentsEditText.getText().toString();
+        dietHistoryString = dietHistory.getDietHistoryInitials();
+        healthStatusString = healthStatus.getHealthStatusInitials();
+        Visit visit = new Visit(healthStatusString, dietHistoryString, patientPK, comments);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(visit);
+
+        //TODO serialize and post
     }
 
 }

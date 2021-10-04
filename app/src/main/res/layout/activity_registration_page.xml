@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".VisitForm">
+    tools:context=".RegistrationPage">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_margin="10dp"
-        android:hint="First Name">
+        android:hint="Last Name">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_edit_text_last_name"
@@ -71,7 +71,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="20dp"
             android:layout_weight="2"
-            android:hint="Day"
+            android:hint="dd"
             app:counterMaxLength="2"
             app:errorEnabled="true">
 
@@ -85,22 +85,12 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_layout_month"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        <Spinner
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:id="@+id/month_spinner"
             android:layout_weight="6"
-            android:hint="Day"
-            app:endIconMode="dropdown_menu">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/month_edit_text"
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_layout_year"
@@ -109,7 +99,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="20dp"
             android:layout_weight="2"
-            android:hint="Day"
+            android:hint="yy"
             app:counterMaxLength="2">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -123,23 +113,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_layout_gender"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <Spinner
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:hint="Gender"
-        app:endIconMode="dropdown_menu">
+        android:id="@+id/gender_spinner"
+        android:layout_height="80dp"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/gender_edit_text"
-            android:layout_width="match_parent"
-            android:padding="5dp"
-            android:layout_margin="10dp"
-            android:layout_height="match_parent" />
-
-    </com.google.android.material.textfield.TextInputLayout>
 
 
 </LinearLayout>
