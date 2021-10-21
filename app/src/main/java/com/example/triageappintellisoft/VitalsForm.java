@@ -12,12 +12,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.triageappintellisoft.databinding.ActivityRegistrationPageBinding;
 import com.example.triageappintellisoft.databinding.ActivityVitalsFormBinding;
 import com.example.triageappintellisoft.models.Vital;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import restvolley.MySingleton;
 
 
 public class VitalsForm extends AppCompatActivity {
@@ -128,6 +141,48 @@ public class VitalsForm extends AppCompatActivity {
         String json=gson.toJson(vital);
 
         //TODO serialize and post
+        JSONObject vitalJsonObject = null;
+        try {
+            vitalJsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //TODO set the correct endpoint below
+        String url = Nothing.URL + "vitals";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, vitalJsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                String auth = "Token " + Nothing.TOKEN;
+                headers.put("Authorization", auth);
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+
+        MySingleton.getInstance(this.getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
 
 
