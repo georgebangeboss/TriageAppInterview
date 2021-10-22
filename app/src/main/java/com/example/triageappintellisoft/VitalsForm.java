@@ -1,5 +1,7 @@
 package com.example.triageappintellisoft;
 
+import static com.example.triageappintellisoft.RegistrationPage.*;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -27,7 +30,12 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import restvolley.MySingleton;
@@ -39,13 +47,17 @@ public class VitalsForm extends AppCompatActivity {
     private MaterialTextView currentDateTV, bmiTV;
 
     public static final String FORM_TITLE = "com.example.triageappintellisoft.FORM_TITLE";
-    public static final String PATIENT_PK="com.example.triageappintellisoft.PATIENT_PK";
+    public static final String PATIENT_PK = "com.example.triageappintellisoft.PATIENT_PK";
     private double bmi, height, weight;
     private String dob;
-    private boolean weightFilled=false;
-    boolean heightFilled=false;
+    private boolean weightFilled = false;
+    boolean heightFilled = false;
     private int patientPK;
     public static final double OVERWEIGHT = 25.0;
+
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String date;
 
 
     @Override
@@ -56,12 +68,16 @@ public class VitalsForm extends AppCompatActivity {
         setContentView(view);
 
         Intent intent = getIntent();
-        patientPK=intent.getIntExtra(PATIENT_PK,1000000);
+        patientPK = intent.getIntExtra(PATIENT_PK, 1000000);
 
         currentDateTV = binding.currentDateTv;
         bmiTV = binding.bmiTv;
         heightEditText = binding.textInputEditTextHeight;
         weightEditText = binding.textInputEditTextWeight;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        date = dateFormat.format(calendar.getTime());
+        currentDateTV.setText(date);
 
         heightEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -71,10 +87,10 @@ public class VitalsForm extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                heightFilled=true;
-                height=Double.parseDouble(charSequence.toString());
-                if(weightFilled){
-                    bmi=weight/(height*height);
+                heightFilled = true;
+                height = Double.parseDouble(charSequence.toString());
+                if (weightFilled) {
+                    bmi = weight / (height * height);
                     bmiTV.setText(String.valueOf(bmi));
                 }
             }
@@ -92,10 +108,10 @@ public class VitalsForm extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                weightFilled=true;
-                weight=Double.parseDouble(charSequence.toString());
-                if(heightFilled){
-                    bmi=weight/(height*height);
+                weightFilled = true;
+                weight = Double.parseDouble(charSequence.toString());
+                if (heightFilled) {
+                    bmi = weight / (height * height);
                     bmiTV.setText(String.valueOf(bmi));
                 }
             }
@@ -111,7 +127,7 @@ public class VitalsForm extends AppCompatActivity {
         Intent intent = new Intent(VitalsForm.this, VisitForm.class);
         String formTitle = (bmi >= OVERWEIGHT) ? "FORM B - OVERWEIGHT" : "FORM A";
         intent.putExtra(FORM_TITLE, formTitle);
-        intent.putExtra(PATIENT_PK,patientPK);
+        intent.putExtra(PATIENT_PK, patientPK);
         startActivity(intent);
         finish();
     }
@@ -127,20 +143,31 @@ public class VitalsForm extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                //TODO check that all fields have been filled
-                saveToDB();
-                goToVisitForms();
+                List<TextInputEditText> editTexts = new ArrayList<>();
+                Collections.addAll(editTexts, heightEditText, weightEditText);
+                if (isFilled(editTexts) && isValidWeightHeight()) {
+                    saveToDB();
+                    goToVisitForms();
+                } else {
+                    Toast.makeText(this, "Fill both height and weight fields", Toast.LENGTH_SHORT).show();
+                }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void saveToDB() {
-        Vital vital=new Vital(height,weight,bmi,patientPK);
-        Gson gson=new Gson();
-        String json=gson.toJson(vital);
+    private boolean isValidWeightHeight() {
+        double height = Double.parseDouble(heightEditText.getText().toString());
+        double weight = Double.parseDouble(weightEditText.getText().toString());
+        return weight > 0 && height > 0;
+    }
 
-        //TODO serialize and post
+    private void saveToDB() {
+        Vital vital = new Vital(height, weight, bmi, patientPK);
+        Gson gson = new Gson();
+        String json = gson.toJson(vital);
+
         JSONObject vitalJsonObject = null;
         try {
             vitalJsonObject = new JSONObject(json);
@@ -148,7 +175,7 @@ public class VitalsForm extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //TODO set the correct endpoint below
+
         String url = Nothing.URL + "vitals";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -167,7 +194,7 @@ public class VitalsForm extends AppCompatActivity {
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 String auth = "Token " + Nothing.TOKEN;
                 headers.put("Authorization", auth);

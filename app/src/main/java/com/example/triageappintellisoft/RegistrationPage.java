@@ -13,12 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -31,7 +30,12 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import restvolley.MySingleton;
@@ -48,6 +52,10 @@ public class RegistrationPage extends AppCompatActivity {
     private static String[] GENDERS = new String[]{"Male", "Female", "Prefer Not To Say"};
 
     private int patientPK;
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String date;
+    private int monthIndex;
 
 
     @Override
@@ -65,13 +73,19 @@ public class RegistrationPage extends AppCompatActivity {
         genderSpinner = binding.genderSpinner;
         yearEditText = binding.yearEditText;
 
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        date = dateFormat.format(calendar.getTime());
+        currentDateTV.setText(date);
+
         ArrayAdapter<String> monthsAdapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, MONTHS);
         monthSpinner.setAdapter(monthsAdapter);
+
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                monthString = String.valueOf(i + 1);
+                monthIndex = (i + 1);
             }
 
             @Override
@@ -79,6 +93,7 @@ public class RegistrationPage extends AppCompatActivity {
 
             }
         });
+        monthSpinner.setSelection(0);
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, GENDERS);
         genderSpinner.setAdapter(genderAdapter);
@@ -103,6 +118,7 @@ public class RegistrationPage extends AppCompatActivity {
 
             }
         });
+        genderSpinner.setSelection(0);
 
 
     }
@@ -140,9 +156,26 @@ public class RegistrationPage extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                //TODO check that all fields have been filled
-                saveToDB();
-                goToVitalsPage();
+                List<TextInputEditText> editTexts = new ArrayList<>();
+                Collections.addAll(editTexts, firstNameEditText, lastNameEditText, dayEditText, yearEditText);
+                if (isFilled(editTexts)) {
+                    firstName = firstNameEditText.getText().toString();
+                    lastName = lastNameEditText.getText().toString();
+                    String dd, mm, yy;
+                    dd = dayEditText.getText().toString();
+                    yy = yearEditText.getText().toString();
+                    if (isValidDate(Integer.parseInt(dd), monthIndex, Integer.parseInt(yy))) {
+                        mm = String.valueOf(monthIndex);
+                        dob = yy + "-" + mm + "-" + dd;
+                        saveToDB();
+                        goToVitalsPage();
+                    } else {
+                        Toast.makeText(RegistrationPage.this, "The date of birth is invalid", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(RegistrationPage.this, "Fill all the fields", Toast.LENGTH_SHORT).show();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -150,14 +183,33 @@ public class RegistrationPage extends AppCompatActivity {
 
     }
 
+    private boolean isValidDate(int day, int month, int year) {
+
+        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+            return day > 0 && day <= 31;
+        } else if (month == 2) {
+            if (year % 4 == 0) {
+                return day > 0 && day <= 29;
+            } else {
+                return day > 0 && day <= 28;
+            }
+        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+            return day > 0 && day <= 30;
+        }
+        return true;
+    }
+
+    public static boolean isFilled(List<TextInputEditText> editTexts) {
+        for (TextInputEditText textInputEditText : editTexts) {
+            if (textInputEditText.getText().toString().length() == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void saveToDB() {
-        firstName = firstNameEditText.getText().toString();
-        lastName = lastNameEditText.getText().toString();
-        String dd, mm, yy;
-        dd = dayEditText.getText().toString();
-        yy = yearEditText.getText().toString();
-        mm = monthString;
-        dob = yy + "-" + mm + "-" + dd;
+
         String genderString = gender.getGenderInitials();
         Patient patient = new Patient(firstName, lastName, dob, genderString);
 
@@ -171,7 +223,7 @@ public class RegistrationPage extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //TODO set the correct endpoint below
+
         String url = Nothing.URL + "patients";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -195,7 +247,7 @@ public class RegistrationPage extends AppCompatActivity {
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 String auth = "Token " + Nothing.TOKEN;
                 headers.put("Authorization", auth);
@@ -212,7 +264,6 @@ public class RegistrationPage extends AppCompatActivity {
 
         MySingleton.getInstance(this.getApplicationContext()).addToRequestQueue(jsonObjectRequest);
 
-        //TODO post and return primary key
 
     }
 

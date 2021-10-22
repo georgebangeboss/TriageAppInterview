@@ -15,10 +15,17 @@ import java.util.List;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {
 
-    private List<String> patientsList;
+    private List<String> patientsNames;
+    private List<String> patientsAges;
+    private List<String> patientsBMIs;
 
-    public MyRecyclerAdapter(List<String> patientsList) {
-        this.patientsList = patientsList;
+    public MyRecyclerAdapter(List<String> patientsNames,
+                             List<String> patientsAges,
+                             List<String> patientsBMIs) {
+        this.patientsNames = patientsNames;
+        this.patientsAges = patientsAges;
+        this.patientsBMIs = patientsBMIs;
+
     }
 
     @NonNull
@@ -30,10 +37,9 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //TODO set Text
-//        holder.getPatientNameTV().setText("");
-//        holder.getPatientNameTV().setText("");
-//        holder.getAgeTV().setText("");
+        holder.getPatientNameTV().setText(patientsNames.get(position));
+        holder.getBmiTV().setText(patientsBMIs.get(position));
+        holder.getAgeTV().setText(patientsAges.get(position));
 
         //TODO set color
         if (position % 2 == 0) {
@@ -45,7 +51,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return patientsList.size();
+        return patientsNames.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,7 +62,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
             patientNameTV = (MaterialTextView) view.findViewById(R.id.full_name_tv);
             ageTV = (MaterialTextView) view.findViewById(R.id.age_tv);
             bmiTV = (MaterialTextView) view.findViewById(R.id.bmi_tv);
-            //TODO add click listener here
+            //TODO add click listener here to Edit
         }
 
         public MaterialTextView getPatientNameTV() {

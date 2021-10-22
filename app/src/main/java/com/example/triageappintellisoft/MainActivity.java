@@ -25,7 +25,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,16 +38,35 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private MaterialTextView currentDateTV;
     private FloatingActionButton addFab;
+    public static final String NORMAL = "NORMAL";
+    public static final String UNDERWEIGHT = "UNDERWEIGHT";
+    public static final String OVERWEIGHT = "OVERWEIGHT";
+    public static final double OVER_WEIGHT_THRESHOLD = 25;
+    public static final double UNDER_WEIGHT_THRESHOLD = 18.5;
+
+
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO add current date to all involved screens
+
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
         currentDateTV = binding.currentDateTv;
+
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        date = dateFormat.format(calendar.getTime());
+        currentDateTV.setText(date);
+
+        List<String> patientsNames = new ArrayList<>();
+        List<String> patientsAges = new ArrayList<>();
+        List<String> patientsBMIs = new ArrayList<>();
+
         addFab = binding.addPatientButton;
         addFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,18 +77,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TODO get patient details from api and write the list below
         String url = Nothing.URL + "patient-short";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        //'first_name','last_name','dob','vitals','age'
-                        for(int i=0;i<response.length();i++){
-                            JSONObject patientObject=null;
+                        //The JSON has 'first_name','last_name','dob','vitals','age'
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject patientObject;
                             try {
-                                patientObject=response.getJSONObject(i);
+                                patientObject = response.getJSONObject(i);
+                                String firstName = patientObject.getString("first_name");
+                                String lastName = patientObject.getString("first_name");
+                                String fullName = firstName + " " + lastName;
+                                String age = patientObject.getString("age");
+                                double bmi = patientObject.getJSONArray("vitals").getDouble(0);
+                                String bmiStatus;
+                                if (bmi < UNDER_WEIGHT_THRESHOLD) {
+                                    bmiStatus = UNDERWEIGHT;
+                                } else if (bmi >= UNDER_WEIGHT_THRESHOLD && bmi < OVER_WEIGHT_THRESHOLD) {
+                                    bmiStatus = NORMAL;
+                                } else {
+                                    bmiStatus = OVERWEIGHT;
+                                }
+                                patientsNames.add(fullName);
+                                patientsAges.add(age);
+                                patientsBMIs.add(bmiStatus);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -82,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 String auth = "Token " + Nothing.TOKEN;
                 headers.put("Authorization", auth);
@@ -92,10 +128,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         MySingleton.getInstance(this.getApplicationContext()).addToRequestQueue(jsonArrayRequest);
-        List<String> patientsList = new ArrayList<>();
 
 
-        MyRecyclerAdapter myAdapter = new MyRecyclerAdapter(patientsList);
+        MyRecyclerAdapter myAdapter = new MyRecyclerAdapter(patientsAges, patientsNames, patientsBMIs);
         RecyclerView rv = binding.patientsRecyclerView;
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
