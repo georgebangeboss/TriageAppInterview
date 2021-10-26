@@ -93,8 +93,10 @@ public class VitalsForm extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 heightFilled = true;
                 height = Double.parseDouble(charSequence.toString());
+                System.out.println("Height = "+height);
                 if (weightFilled && height != 0) {
                     bmi = weight / (height * height / 10000);
+                    bmi=Math.round(bmi*100)/100;
                     bmiTV.setText(String.valueOf(bmi));
                 }
             }
@@ -114,8 +116,10 @@ public class VitalsForm extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 weightFilled = true;
                 weight = Double.parseDouble(charSequence.toString());
+                System.out.println("Weight = "+weight);
                 if (heightFilled && height != 0) {
                     bmi = weight / (height * height / 10000);
+                    bmi=Math.round(bmi*100)/100;
                     bmiTV.setText(String.valueOf(bmi));
                 }
             }

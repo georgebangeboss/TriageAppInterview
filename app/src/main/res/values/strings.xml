@@ -5,4 +5,7 @@
     <string name="patient_listing_label">Patient Listing</string>
     <string name="registration_page_label">Patient Registration</string>
     <string name="save_btn_text">SAVE</string>
+    <string name="full_name">Full Name</string>
+    <string name="age">Age</string>
+    <string name="bmi_status">BMI status</string>
 </resources>
