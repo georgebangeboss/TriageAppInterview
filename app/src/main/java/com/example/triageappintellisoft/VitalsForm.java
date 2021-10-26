@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.triageappintellisoft.databinding.ActivityRegistrationPageBinding;
 import com.example.triageappintellisoft.databinding.ActivityVitalsFormBinding;
 import com.example.triageappintellisoft.models.Vital;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.gson.Gson;
@@ -45,6 +46,7 @@ public class VitalsForm extends AppCompatActivity {
     private ActivityVitalsFormBinding binding;
     private TextInputEditText heightEditText, weightEditText;
     private MaterialTextView currentDateTV, bmiTV;
+    private MaterialButton saveBtn;
 
     public static final String FORM_TITLE = "com.example.triageappintellisoft.FORM_TITLE";
     public static final String PATIENT_PK = "com.example.triageappintellisoft.PATIENT_PK";
@@ -72,12 +74,14 @@ public class VitalsForm extends AppCompatActivity {
 
         currentDateTV = binding.currentDateTv;
         bmiTV = binding.bmiTv;
+        saveBtn = binding.saveBtnForm;
         heightEditText = binding.textInputEditTextHeight;
         weightEditText = binding.textInputEditTextWeight;
         calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         date = dateFormat.format(calendar.getTime());
         currentDateTV.setText(date);
+
 
         heightEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -89,8 +93,8 @@ public class VitalsForm extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 heightFilled = true;
                 height = Double.parseDouble(charSequence.toString());
-                if (weightFilled) {
-                    bmi = weight / (height * height);
+                if (weightFilled && height != 0) {
+                    bmi = weight / (height * height / 10000);
                     bmiTV.setText(String.valueOf(bmi));
                 }
             }
@@ -110,8 +114,8 @@ public class VitalsForm extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 weightFilled = true;
                 weight = Double.parseDouble(charSequence.toString());
-                if (heightFilled) {
-                    bmi = weight / (height * height);
+                if (heightFilled && height != 0) {
+                    bmi = weight / (height * height / 10000);
                     bmiTV.setText(String.valueOf(bmi));
                 }
             }
@@ -119,6 +123,25 @@ public class VitalsForm extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<TextInputEditText> editTexts = new ArrayList<>();
+                Collections.addAll(editTexts, heightEditText, weightEditText);
+                if (isFilled(editTexts)) {
+                    if (isValidWeightHeight()) {
+                        saveToDB();
+                        goToVisitForms();
+                    } else {
+                        Toast.makeText(VitalsForm.this, "Can't be zero", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                } else {
+                    Toast.makeText(VitalsForm.this, "Fill both height and weight fields", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -132,30 +155,7 @@ public class VitalsForm extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.appbar_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                List<TextInputEditText> editTexts = new ArrayList<>();
-                Collections.addAll(editTexts, heightEditText, weightEditText);
-                if (isFilled(editTexts) && isValidWeightHeight()) {
-                    saveToDB();
-                    goToVisitForms();
-                } else {
-                    Toast.makeText(this, "Fill both height and weight fields", Toast.LENGTH_SHORT).show();
-                }
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     private boolean isValidWeightHeight() {
         double height = Double.parseDouble(heightEditText.getText().toString());
@@ -176,7 +176,7 @@ public class VitalsForm extends AppCompatActivity {
         }
 
 
-        String url = Nothing.URL + "vitals";
+        String url = Nothing.URL + "vitals/";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, url, vitalJsonObject, new Response.Listener<JSONObject>() {
@@ -203,10 +203,6 @@ public class VitalsForm extends AppCompatActivity {
                 return headers;
             }
 
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
         };
 
         MySingleton.getInstance(this.getApplicationContext()).addToRequestQueue(jsonObjectRequest);

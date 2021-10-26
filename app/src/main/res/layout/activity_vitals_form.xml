@@ -42,8 +42,9 @@
         android:id="@+id/text_input_layout_height"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="10dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
         android:hint="Height in cm">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -60,7 +61,7 @@
         android:id="@+id/text_input_layout_weight"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:layout_margin="10dp"
         android:hint="Weight in kg">
 
@@ -74,7 +75,15 @@
             android:padding="5dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
+    <com.google.android.material.button.MaterialButton
+        android:layout_marginTop="10dp"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/save_btn_text"
+        android:layout_width="150dp"
+        android:id="@+id/save_btn_form"
+        android:layout_height="60dp"/>
 
 
 </LinearLayout>

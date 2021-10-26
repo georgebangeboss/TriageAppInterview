@@ -19,8 +19,10 @@
         android:id="@+id/text_input_layout_first_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="10dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
         android:hint="First Name">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -36,7 +38,7 @@
         android:id="@+id/text_input_layout_last_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:layout_margin="10dp"
         android:hint="Last Name">
 
@@ -52,16 +54,18 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:paddingLeft="25dp"
         android:layout_margin="10dp"
         android:gravity="center|left"
-        android:text="Enter Date of Birth" />
+        android:text="Date of Birth" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:gravity="center"
+        android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:padding="10dp"
+
         android:weightSum="10">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -69,9 +73,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="20dp"
-            android:layout_weight="2"
-            android:hint="dd"
+            android:layout_weight="2.5"
+            android:hint="day"
             app:counterMaxLength="2"
             app:errorEnabled="true">
 
@@ -89,7 +92,8 @@
         <Spinner
             android:layout_width="0dp"
             android:id="@+id/month_spinner"
-            android:layout_weight="6"
+            android:paddingLeft="5dp"
+            android:layout_weight="4.0"
             android:layout_height="match_parent"/>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -97,10 +101,10 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="20dp"
-            android:layout_weight="2"
-            android:hint="yy"
-            app:counterMaxLength="2">
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="3.5"
+            android:hint="year"
+            app:counterMaxLength="4">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/year_edit_text"
@@ -108,16 +112,42 @@
                 android:layout_height="match_parent"
                 android:padding="5dp"
                 android:inputType="number"
-                android:maxLength="2" />
+                android:maxLength="4" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
-    <Spinner
+    <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/gender_spinner"
-        android:layout_height="80dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:padding="5dp"
+        android:weightSum="2"
+        android:layout_height="50dp">
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:text="Gender" />
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingRight="20dp"
+            android:id="@+id/gender_spinner"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
+<com.google.android.material.button.MaterialButton
+    android:layout_marginTop="10dp"
+    android:elevation="10dp"
+    android:gravity="center"
+    android:layout_gravity="center_horizontal"
+    android:text="@string/save_btn_text"
+    android:layout_width="150dp"
+    android:id="@+id/save_btn_reg"
+    android:layout_height="60dp"/>
 
 
 </LinearLayout>

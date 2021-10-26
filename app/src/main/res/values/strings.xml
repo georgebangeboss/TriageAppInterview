@@ -4,4 +4,5 @@
     <string name="vitals_page_label">Vitals</string>
     <string name="patient_listing_label">Patient Listing</string>
     <string name="registration_page_label">Patient Registration</string>
+    <string name="save_btn_text">SAVE</string>
 </resources>

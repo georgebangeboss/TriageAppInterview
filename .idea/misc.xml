@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/admin/AndroidStudioProjects/TriageAppIntelliSoft/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/TriageAppIntelliSoft/app/src/main/res/layout/activity_main.xml" value="0.1308876811594203" />
-        <entry key="..\:/Users/admin/AndroidStudioProjects/TriageAppIntelliSoft/app/src/main/res/layout/activity_registration_page.xml" value="0.2" />
+        <entry key="..\:/Users/admin/AndroidStudioProjects/TriageAppIntelliSoft/app/src/main/res/layout/activity_registration_page.xml" value="0.1" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/TriageAppIntelliSoft/app/src/main/res/layout/activity_visit_form.xml" value="0.1921875" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/TriageAppIntelliSoft/app/src/main/res/layout/activity_vitals_form.xml" value="0.1921875" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/TriageAppIntelliSoft/app/src/main/res/layout/patient_item.xml" value="0.1921875" />

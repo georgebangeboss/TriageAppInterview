@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormat;
     private String date;
 
+    MyRecyclerAdapter myAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -63,9 +66,16 @@ public class MainActivity extends AppCompatActivity {
         date = dateFormat.format(calendar.getTime());
         currentDateTV.setText(date);
 
-        List<String> patientsNames = new ArrayList<>();
-        List<String> patientsAges = new ArrayList<>();
-        List<String> patientsBMIs = new ArrayList<>();
+
+
+        List<String> patientsNames = Arrays.asList("Davis","Frank","George","Tony","Maisha","Stan","Cal");
+        List<String> patientsAges = Arrays.asList("1y 2m","1y 3m","3y 11m","11y 3m","21y 11m","22y","13y");
+        List<String> patientsBMIs = Arrays.asList("Underweight","Underweight","Underweight","Normal","Underweight","Underweight","Normal");
+
+//        List<String> patientsNames = new ArrayList<>();
+//        List<String> patientsAges = new ArrayList<>();
+//        List<String> patientsBMIs = new ArrayList<>();
+        myAdapter = new MyRecyclerAdapter(patientsNames, patientsAges, patientsBMIs);
 
         addFab = binding.addPatientButton;
         addFab.setOnClickListener(new View.OnClickListener() {
@@ -77,60 +87,60 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String url = Nothing.URL + "patient-short";
+        String url = Nothing.URL + "patient-short/";
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        //The JSON has 'first_name','last_name','dob','vitals','age'
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject patientObject;
-                            try {
-                                patientObject = response.getJSONObject(i);
-                                String firstName = patientObject.getString("first_name");
-                                String lastName = patientObject.getString("first_name");
-                                String fullName = firstName + " " + lastName;
-                                String age = patientObject.getString("age");
-                                double bmi = patientObject.getJSONArray("vitals").getDouble(0);
-                                String bmiStatus;
-                                if (bmi < UNDER_WEIGHT_THRESHOLD) {
-                                    bmiStatus = UNDERWEIGHT;
-                                } else if (bmi >= UNDER_WEIGHT_THRESHOLD && bmi < OVER_WEIGHT_THRESHOLD) {
-                                    bmiStatus = NORMAL;
-                                } else {
-                                    bmiStatus = OVERWEIGHT;
-                                }
-                                patientsNames.add(fullName);
-                                patientsAges.add(age);
-                                patientsBMIs.add(bmiStatus);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+//                new Response.Listener<JSONArray>() {
+//                    @Override
+//                    public void onResponse(JSONArray response) {
+//                        //The JSON has 'first_name','last_name','dob','vitals','age'
+//                        for (int i = 0; i < response.length(); i++) {
+//                            JSONObject patientObject;
+//                            try {
+//                                patientObject = response.getJSONObject(i);
+//                                String firstName = patientObject.getString("first_name");
+//                                String lastName = patientObject.getString("first_name");
+//                                String fullName = firstName + " " + lastName;
+//                                String age = patientObject.getString("age");
+//                                double bmi = 0;// patientObject.getJSONArray("vitals").getDouble(0);
+//                                String bmiStatus;
+//                                if (bmi < UNDER_WEIGHT_THRESHOLD) {
+//                                    bmiStatus = UNDERWEIGHT;
+//                                } else if (bmi >= UNDER_WEIGHT_THRESHOLD && bmi < OVER_WEIGHT_THRESHOLD) {
+//                                    bmiStatus = NORMAL;
+//                                } else {
+//                                    bmiStatus = OVERWEIGHT;
+//                                }
+//                                patientsNames.add(fullName);
+//                                patientsAges.add(age);
+//                                patientsBMIs.add(bmiStatus);
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                        myAdapter.notifyDataSetChanged();
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                System.out.println(error);
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                Map<String, String> headers = new HashMap<>();
+//                String auth = "Token " + Nothing.TOKEN;
+//                headers.put("Authorization", auth);
+//                headers.put("Accept", "application/json");
+//                headers.put("Content-Type", "application/json");
+//                return headers;
+//            }
+//        };
+//        MySingleton.getInstance(this.getApplicationContext()).addToRequestQueue(jsonArrayRequest);
 
-                        }
 
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                String auth = "Token " + Nothing.TOKEN;
-                headers.put("Authorization", auth);
-                headers.put("Accept", "application/json");
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
-        };
-        MySingleton.getInstance(this.getApplicationContext()).addToRequestQueue(jsonArrayRequest);
-
-
-        MyRecyclerAdapter myAdapter = new MyRecyclerAdapter(patientsAges, patientsNames, patientsBMIs);
         RecyclerView rv = binding.patientsRecyclerView;
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));

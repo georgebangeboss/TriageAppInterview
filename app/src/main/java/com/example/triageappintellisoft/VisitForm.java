@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.triageappintellisoft.databinding.ActivityVisitFormBinding;
 import com.example.triageappintellisoft.models.Visit;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.gson.Gson;
@@ -42,6 +43,7 @@ public class VisitForm extends AppCompatActivity {
     private RadioGroup healthRadioGroup;
     private TextInputEditText commentsEditText;
     private MaterialTextView currentDateTV;
+    private MaterialButton saveBtn;
 
     private HealthStatus healthStatus ;
     private DietHistory dietHistory;
@@ -73,11 +75,26 @@ public class VisitForm extends AppCompatActivity {
         dietHistoryRadioGroup = binding.dietHistoryRadios;
         healthRadioGroup = binding.heathStatusRadios;
         commentsEditText = binding.commentsEditText;
+        saveBtn= binding.saveBtnVisit;
 
         calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         date = dateFormat.format(calendar.getTime());
         currentDateTV.setText(date);
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (healthStatus != null && dietHistory != null) {
+                    saveToDB();
+                    Intent intent = new Intent(VisitForm.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(VisitForm.this, "You haven't selected", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         dietHistoryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -141,28 +158,6 @@ public class VisitForm extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.appbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            if (healthStatus != null && dietHistory != null) {
-                saveToDB();
-                Intent intent = new Intent(VisitForm.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, "You haven't selected", Toast.LENGTH_SHORT).show();
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void saveToDB() {
         comments = commentsEditText.getText().toString();
         dietHistoryString = dietHistory.getDietHistoryInitials();
@@ -175,12 +170,13 @@ public class VisitForm extends AppCompatActivity {
         JSONObject visitJsonObject = null;
         try {
             visitJsonObject = new JSONObject(json);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        String url = Nothing.URL + "visit-forms";
+        String url = Nothing.URL + "visit-forms/";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, url, visitJsonObject, new Response.Listener<JSONObject>() {
@@ -207,10 +203,6 @@ public class VisitForm extends AppCompatActivity {
                 return headers;
             }
 
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
         };
 
         MySingleton.getInstance(this.getApplicationContext()).addToRequestQueue(jsonObjectRequest);

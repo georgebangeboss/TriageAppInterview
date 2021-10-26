@@ -13,64 +13,62 @@
         android:padding="5dp"
         android:layout_height="30dp"
         android:layout_gravity="right"
-        android:layout_margin="10dp"
+        android:layout_margin="3dp"
         android:text="Date Here" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_margin="10dp"
-        android:padding="5dp"
+        android:layout_marginHorizontal="10dp"
         android:gravity="center|left"
         android:text="General Health?" />
 
     <RadioGroup
         android:id="@+id/heath_status_radios"
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="2dp"
         android:paddingLeft="20dp"
         android:gravity="center|left"
-        android:layout_height="100dp">
+        android:layout_height="60dp">
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_good"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="25dp"
             android:text="Good" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_bad"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="25dp"
             android:text="Bad" />
 
     </RadioGroup>
-
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_margin="10dp"
+        android:layout_marginHorizontal="10dp"
         android:gravity="center|left"
         android:text="Have you ever been on diet to lose weight?" />
 
     <RadioGroup
         android:id="@+id/diet_history_radios"
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="2dp"
         android:paddingLeft="20dp"
         android:gravity="center|left"
-        android:layout_height="100dp">
+        android:layout_height="60dp">
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_yes"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="25dp"
             android:text="Yes" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_no"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="25dp"
             android:text="No" />
 
     </RadioGroup>
@@ -83,15 +81,25 @@
         android:hint="Comments"
         app:counterEnabled="true"
         android:layout_margin="10dp"
-        app:counterMaxLength="400">
+        app:counterMaxLength="300">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/comments_edit_text"
-            android:padding="5dp"
+            android:padding="2dp"
+            android:gravity="start"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:maxLength="200" />
+            android:layout_height="200dp"
+            android:maxLength="300" />
     </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.button.MaterialButton
+        android:layout_marginTop="10dp"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/save_btn_text"
+        android:layout_width="150dp"
+        android:id="@+id/save_btn_visit"
+        android:layout_height="60dp"/>
 
 
 </LinearLayout>
