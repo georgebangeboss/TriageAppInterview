@@ -133,7 +133,6 @@ public class VitalsForm extends AppCompatActivity {
                 if (isFilled(editTexts)) {
                     if (isValidWeightHeight()) {
                         saveToDB();
-                        goToVisitForms();
                     } else {
                         Toast.makeText(VitalsForm.this, "Can't be zero", Toast.LENGTH_SHORT).show();
 
@@ -183,13 +182,14 @@ public class VitalsForm extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        goToVisitForms();
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
+                        Toast.makeText(VitalsForm.this,"Check your Internet",  Toast.LENGTH_SHORT).show();
+
 
                     }
                 }) {

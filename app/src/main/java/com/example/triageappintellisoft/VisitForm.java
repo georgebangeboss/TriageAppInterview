@@ -87,9 +87,7 @@ public class VisitForm extends AppCompatActivity {
             public void onClick(View view) {
                 if (healthStatus != null && dietHistory != null) {
                     saveToDB();
-                    Intent intent = new Intent(VisitForm.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+
                 } else {
                     Toast.makeText(VisitForm.this, "You haven't selected", Toast.LENGTH_SHORT).show();
                 }
@@ -183,13 +181,15 @@ public class VisitForm extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        Intent intent = new Intent(VisitForm.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
+                        Toast.makeText(VisitForm.this,"Check your Internet",  Toast.LENGTH_SHORT).show();
 
                     }
                 }) {

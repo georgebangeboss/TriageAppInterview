@@ -100,7 +100,6 @@ public class RegistrationPage extends AppCompatActivity {
                         mm = String.valueOf(monthIndex);
                         dob = yy + "-" + mm + "-" + dd;
                         saveToDB();
-                        goToVitalsPage();
                     } else {
                         Toast.makeText(RegistrationPage.this, "The date of birth is invalid", Toast.LENGTH_SHORT).show();
                     }
@@ -259,6 +258,7 @@ public class RegistrationPage extends AppCompatActivity {
 
                         try {
                             patientPK = response.getInt("id");
+                            goToVitalsPage();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -268,6 +268,7 @@ public class RegistrationPage extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         System.out.println(error);
+                        Toast.makeText(RegistrationPage.this,"Check your Internet",  Toast.LENGTH_SHORT).show();
 
                     }
                 }) {
